@@ -1,0 +1,150 @@
+package sample;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+
+public class Controller {
+
+
+    @FXML
+    private ResourceBundle resources;
+
+    @FXML
+    private URL location;
+
+    @FXML
+    private TextField textField;
+
+    @FXML
+    private RadioButton radioButtonCelcius;
+
+    @FXML
+    private RadioButton radioButtonKelvin;
+
+    @FXML
+    private RadioButton radioButtonFahrengeit;
+
+    @FXML
+    private Label labelForAnotherScaleLeft;
+
+    @FXML
+    private Label labelForAnotherScaleRight;
+
+    @FXML
+    private Label labelForAnotherScaleHeaderLeft;
+
+    @FXML
+    private Label labelForAnotherScaleHeaderRight;
+
+    @FXML
+    void initialize() throws InterruptedException {
+
+        ToggleGroup group = new ToggleGroup();
+        radioButtonCelcius.setToggleGroup(group);
+        radioButtonKelvin.setToggleGroup(group);
+        radioButtonFahrengeit.setToggleGroup(group);
+
+
+
+        EventHandler <ActionEvent> eventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String string = new String();
+                if(radioButtonKelvin.isSelected() || radioButtonFahrengeit.isSelected() || radioButtonCelcius.isSelected())
+                {
+                    string = textField.getText();
+                    if(string.isEmpty() || string.compareTo("Write number") == 0)
+                    {
+                        textField.setText("Write number");
+                        return;
+                    }
+                }
+                labelForAnotherScaleHeaderLeft.setText("");
+                labelForAnotherScaleHeaderRight.setText("");
+
+                    RadioButton[] buttons = new RadioButton[3];
+                    buttons[0] = radioButtonCelcius;
+                    buttons[1] = radioButtonFahrengeit;
+                    buttons[2] = radioButtonKelvin;
+                    for (int i = 0; i < buttons.length; i++) {
+                        if (!buttons[i].isSelected()) {
+                            String string1 = new String();
+                            string1 = buttons[i].getText();
+                            if (labelForAnotherScaleHeaderLeft.getText().isEmpty()) {
+                                labelForAnotherScaleHeaderLeft.setText(buttons[i].getText());
+                            } else {
+                                labelForAnotherScaleHeaderRight.setText(buttons[i].getText());
+                            }
+                        }
+                        else{
+                            continue;
+                        }
+                    }
+                String xz = new String();
+                xz = textField.getText();
+                int number = Integer.parseInt(xz);
+                double calculation;
+
+                if(((RadioButton)event.getSource()).getText().compareTo(radioButtonCelcius.getText()) == 0)
+                {
+                    if(labelForAnotherScaleHeaderLeft.getText().compareTo("Fahrengeit")==0)
+                    {
+                        calculation = 1.8*number+32;
+                        labelForAnotherScaleLeft.setText("" + calculation);
+                        calculation = number+273.15;
+                    }
+                    else{
+                        calculation = number+273.15;
+                        labelForAnotherScaleLeft.setText("" + calculation);
+                        calculation = 1.8*number+32;
+                    }
+                    labelForAnotherScaleRight.setText("" + calculation);
+                }
+
+                if(((RadioButton)event.getSource()).getText().compareTo(radioButtonFahrengeit.getText()) == 0)
+                {
+                    if(labelForAnotherScaleHeaderLeft.getText().compareTo("Celcius")==0)
+                    {
+                        calculation = 0.55555555555*(number-32);
+                        labelForAnotherScaleLeft.setText(""+calculation);
+                        calculation = 0.55555555555*(number-32) + 273.15;
+                    }
+                    else{
+                        calculation = 0.55555555555*(number-32) + 273.15;
+                        labelForAnotherScaleLeft.setText(""+calculation);
+                        calculation = 0.55555555555*(number-32);
+                    }
+                    labelForAnotherScaleRight.setText("" + calculation);
+                }
+
+                if(((RadioButton)event.getSource()).getText().compareTo(radioButtonKelvin.getText()) == 0)
+                {
+                    if(labelForAnotherScaleHeaderLeft.getText().compareTo("Celcius")==0)
+                    {
+                        calculation = number-273.15;
+                        labelForAnotherScaleLeft.setText("" + calculation);
+                        calculation = 1.8*(number-273.15)+32;
+                    }
+                    else{
+                        calculation = 1.8*(number-273.15)+32;
+                        labelForAnotherScaleLeft.setText("" + calculation);
+                        calculation = number-273.15;
+                    }
+                    labelForAnotherScaleRight.setText(""+calculation);
+                }
+            }
+        };
+        //adding to event Handler
+        radioButtonCelcius.addEventHandler(ActionEvent.ACTION, eventHandler);
+        radioButtonFahrengeit.addEventHandler(ActionEvent.ACTION, eventHandler);
+        radioButtonKelvin.addEventHandler(ActionEvent.ACTION, eventHandler);
+
+    }
+}
+
+
